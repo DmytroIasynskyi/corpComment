@@ -1,24 +1,16 @@
 import {TriangleUpIcon} from "@radix-ui/react-icons";
-import {useEffect, useState} from "react";
 import Spinner from "./Spinner.tsx";
+import ErrorMessage from "./ErrorMessage.tsx";
+import {TFeedbackItem} from "../lib/types.ts";
+import {useFeedbackItemContext} from "../hooks/hooks.ts";
 
 function FeedbackList() {
-    const [feedbackItems, setFeedbackItems] = useState([]);
-    const [isLoading, setIsLoading] = useState(false);
-
-    useEffect(() => {
-        setIsLoading(true);
-        fetch('https://bytegrad.com/course-assets/projects/corpcomment/api/feedbacks')
-            .then((response) => response.json())
-            .then((data) => {
-                setFeedbackItems(data.feedbacks);
-                setIsLoading(false);
-            });
-    }, []);
+    const {isLoading, errorMessage, feedbackItems} = useFeedbackItemContext();
 
     return (
         <ol className={'feedback-list'}>
             {isLoading && <Spinner />}
+            {errorMessage && <ErrorMessage errorMessage={errorMessage}/>}
             {feedbackItems && feedbackItems.map((feedbackItem) => (
                 <FeedBackItem feedbackItem={feedbackItem} key={feedbackItem.id} />
             ))}
@@ -26,7 +18,8 @@ function FeedbackList() {
     );
 }
 
-function FeedBackItem({feedbackItem}: {feedbackItem: FeedbackItem}) {
+
+function FeedBackItem({feedbackItem}: {feedbackItem: TFeedbackItem}) {
     const { company, badgeLetter, text, daysAgo, upvoteCount } = feedbackItem;
     return (
         <li className={'feedback'} >
@@ -47,13 +40,5 @@ function FeedBackItem({feedbackItem}: {feedbackItem: FeedbackItem}) {
     )
 }
 
-type FeedbackItem = {
-    id: number;
-    company: string;
-    badgeLetter: string;
-    text: string;
-    daysAgo: number;
-    upvoteCount: number;
-}
 
 export default FeedbackList;
