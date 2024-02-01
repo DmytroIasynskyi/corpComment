@@ -1,23 +1,33 @@
 import {createContext, ReactNode, useEffect, useState} from "react";
 import {TFeedbackItem} from "../lib/types.ts";
-
+import {ALL_COMPANIES, BASE_URL} from "../lib/constants.ts";
 
 export const FeedbackItemsContext = createContext<{
-    feedbackItems: TFeedbackItem[];
     isLoading: boolean;
     errorMessage: string;
     handleAddToList: (text: string) => void;
+    uniqCompanyList: string[];
+    selectedFeedbackItems: TFeedbackItem[];
+    setSelectedCompany: (company: string) => void;
 }>({
-    feedbackItems: [],
     isLoading: false,
     errorMessage: "",
     handleAddToList: () => {},
+    uniqCompanyList: [],
+    selectedFeedbackItems: [],
+    setSelectedCompany: () => {}
 });
 
 function FeedbackItemsContextProvider({children}: {children: ReactNode}) {
     const [feedbackItems, setFeedbackItems] = useState<TFeedbackItem[]>([]);
     const [isLoading, setIsLoading] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
+    const [selectedCompany, setSelectedCompany] = useState(ALL_COMPANIES);
+
+    const filteredFeedbackItems = feedbackItems.filter((feedbackItem) => feedbackItem.company === selectedCompany);
+    const selectedFeedbackItems = selectedCompany === ALL_COMPANIES ? feedbackItems : filteredFeedbackItems;
+    const companyList = feedbackItems.map((feedbackItem) => feedbackItem.company);
+    const uniqCompanyList = [ALL_COMPANIES,...new Set(companyList)];
 
     async function handleAddToList(text: string) {
         const companyName = text
@@ -36,7 +46,7 @@ function FeedbackItemsContextProvider({children}: {children: ReactNode}) {
 
         setFeedbackItems([...feedbackItems, newItem])
 
-        await fetch(`https://bytegrad.com/course-assets/projects/corpcomment/api/feedbacks`, {
+        await fetch(BASE_URL, {
             method: 'POST',
             headers: {
                 Accept: 'application/json',
@@ -48,7 +58,7 @@ function FeedbackItemsContextProvider({children}: {children: ReactNode}) {
 
     useEffect(() => {
         setIsLoading(true);
-        fetch('https://bytegrad.com/course-assets/projects/corpcomment/api/feedbacks')
+        fetch(BASE_URL)
             .then((response) => {
                 if (!response.ok) {
                     throw new Error();
@@ -67,10 +77,12 @@ function FeedbackItemsContextProvider({children}: {children: ReactNode}) {
 
     return (
         <FeedbackItemsContext.Provider value={{
-            feedbackItems,
             isLoading,
             errorMessage,
             handleAddToList,
+            uniqCompanyList,
+            selectedFeedbackItems,
+            setSelectedCompany
         }}>
             {children}
         </FeedbackItemsContext.Provider>
