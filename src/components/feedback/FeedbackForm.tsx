@@ -3,11 +3,11 @@ import {MAX_CHARACTERS} from "../../lib/constants.ts";
 import {useFeedbackItemContext} from "../../hooks/hooks.ts";
 
 function FeedbackForm() {
+    const {handleAddToList} = useFeedbackItemContext();
     const [text, setText] = useState("");
     const [showValidIndicator, setShowValidIndicator] = useState(false);
     const [showInValidIndicator, setShowInValidIndicator] = useState(false);
     const charactersLeft = MAX_CHARACTERS - text.length;
-    const {handleAddToList} = useFeedbackItemContext();
 
     return (
         <form className={`form ${showValidIndicator && 'form--valid'} ${showInValidIndicator && 'form--invalid'}`} onSubmit={handleSubmit}>

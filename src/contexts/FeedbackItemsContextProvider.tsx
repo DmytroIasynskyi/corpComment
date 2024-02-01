@@ -9,14 +9,7 @@ export const FeedbackItemsContext = createContext<{
     uniqCompanyList: string[];
     selectedFeedbackItems: TFeedbackItem[];
     setSelectedCompany: (company: string) => void;
-}>({
-    isLoading: false,
-    errorMessage: "",
-    handleAddToList: () => {},
-    uniqCompanyList: [],
-    selectedFeedbackItems: [],
-    setSelectedCompany: () => {}
-});
+} | null>(null);
 
 function FeedbackItemsContextProvider({children}: {children: ReactNode}) {
     const [feedbackItems, setFeedbackItems] = useState<TFeedbackItem[]>([]);
