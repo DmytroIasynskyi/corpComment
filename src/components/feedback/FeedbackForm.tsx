@@ -4,11 +4,13 @@ import {useFeedbackItemContext} from "../../hooks/hooks.ts";
 
 function FeedbackForm() {
     const [text, setText] = useState("");
+    const [showValidIndicator, setShowValidIndicator] = useState(false);
+    const [showInValidIndicator, setShowInValidIndicator] = useState(false);
     const charactersLeft = MAX_CHARACTERS - text.length;
     const {handleAddToList} = useFeedbackItemContext();
 
     return (
-        <form className={`form`} onSubmit={handleSubmit}>
+        <form className={`form ${showValidIndicator && 'form--valid'} ${showInValidIndicator && 'form--invalid'}`} onSubmit={handleSubmit}>
             <textarea
               id="feedback-textarea"
               placeholder="blabla"
@@ -31,8 +33,21 @@ function FeedbackForm() {
 
     function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
         event.preventDefault();
-        handleAddToList(text);
-        setText("");
+
+        //basic validation
+        if(text.includes("#") && text.length >= 5) {
+            handleAddToList(text);
+            setText("");
+            setShowValidIndicator(true);
+            setTimeout(() => {
+                setShowValidIndicator(false);
+            }, 2000)
+        } else {
+            setShowInValidIndicator(true);
+            setTimeout(() => {
+                setShowInValidIndicator(false);
+            }, 2000)
+        }
     }
 
     function handleChange(event: React.ChangeEvent<HTMLTextAreaElement>) {
