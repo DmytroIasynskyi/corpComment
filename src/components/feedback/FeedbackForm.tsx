@@ -1,6 +1,6 @@
 import React, {useState} from "react";
-import {MAX_CHARACTERS} from "../lib/constants.ts";
-import {useFeedbackItemContext} from "../hooks/hooks.ts";
+import {MAX_CHARACTERS} from "../../lib/constants.ts";
+import {useFeedbackItemContext} from "../../hooks/hooks.ts";
 
 function FeedbackForm() {
     const [text, setText] = useState("");

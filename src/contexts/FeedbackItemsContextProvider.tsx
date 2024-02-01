@@ -19,7 +19,7 @@ function FeedbackItemsContextProvider({children}: {children: ReactNode}) {
     const [isLoading, setIsLoading] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
 
-    function handleAddToList(text: string) {
+    async function handleAddToList(text: string) {
         const companyName = text
             .split(' ')
             .find((word: string) => word.startsWith('#'))!
@@ -33,7 +33,17 @@ function FeedbackItemsContextProvider({children}: {children: ReactNode}) {
             daysAgo: 0,
             upvoteCount: 0
         }
+
         setFeedbackItems([...feedbackItems, newItem])
+
+        await fetch(`https://bytegrad.com/course-assets/projects/corpcomment/api/feedbacks`, {
+            method: 'POST',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(newItem),
+        })
     }
 
     useEffect(() => {

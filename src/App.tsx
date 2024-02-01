@@ -1,5 +1,5 @@
-import Footer from "./components/Footer.tsx";
-import Container from "./components/Container.tsx";
+import Footer from "./components/layout/Footer.tsx";
+import Container from "./components/layout/Container.tsx";
 import HashtagList from "./components/HashtagList.tsx";
 import FeedbackItemsContextProvider from "./contexts/FeedbackItemsContextProvider.tsx";
 

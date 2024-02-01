@@ -1,6 +1,6 @@
 
-import PageHeading from "./PageHeading.tsx";
-import FeedbackForm from "./FeedbackForm.tsx";
+import PageHeading from "../PageHeading.tsx";
+import FeedbackForm from "../feedback/FeedbackForm.tsx";
 
 
 function Header() {

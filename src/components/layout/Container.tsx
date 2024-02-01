@@ -1,5 +1,5 @@
 import Header from "./Header.tsx";
-import FeedbackList from "./FeedbackList.tsx";
+import FeedbackList from "../feedback/FeedbackList.tsx";
 
 function Container() {
     return (
