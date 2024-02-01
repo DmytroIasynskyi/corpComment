@@ -1,6 +1,7 @@
-import {createContext, ReactNode, useEffect, useState} from "react";
+import {createContext, ReactNode,  useState} from "react";
 import {TFeedbackItem} from "../lib/types.ts";
 import {ALL_COMPANIES, BASE_URL} from "../lib/constants.ts";
+import {useFeedbackItems} from "../hooks/hooks.ts";
 
 export const FeedbackItemsContext = createContext<{
     isLoading: boolean;
@@ -12,9 +13,7 @@ export const FeedbackItemsContext = createContext<{
 } | null>(null);
 
 function FeedbackItemsContextProvider({children}: {children: ReactNode}) {
-    const [feedbackItems, setFeedbackItems] = useState<TFeedbackItem[]>([]);
-    const [isLoading, setIsLoading] = useState(false);
-    const [errorMessage, setErrorMessage] = useState("");
+    const { feedbackItems, isLoading, errorMessage, setFeedbackItems } = useFeedbackItems();
     const [selectedCompany, setSelectedCompany] = useState(ALL_COMPANIES);
 
     const filteredFeedbackItems = feedbackItems.filter((feedbackItem) => feedbackItem.company === selectedCompany);
@@ -48,25 +47,6 @@ function FeedbackItemsContextProvider({children}: {children: ReactNode}) {
             body: JSON.stringify(newItem),
         })
     }
-
-    useEffect(() => {
-        setIsLoading(true);
-        fetch(BASE_URL)
-            .then((response) => {
-                if (!response.ok) {
-                    throw new Error();
-                }
-                return response.json();
-            })
-            .then((data) => {
-                setFeedbackItems(data.feedbacks);
-                setIsLoading(false);
-            })
-            .catch((error) => {
-                setErrorMessage("ERROR! " + error.message);
-                setIsLoading(false);
-            })
-    }, []);
 
     return (
         <FeedbackItemsContext.Provider value={{
